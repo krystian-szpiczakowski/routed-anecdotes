@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link, Routes, Route } from 'react-router-dom'
+import { Link, Routes, Route, useMatch } from 'react-router-dom'
+import Anecdote from './Anecdote'
 
 const Menu = () => {
   const padding = {
@@ -18,7 +19,7 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} ><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link></li>)}
     </ul>
   </div>
 )
@@ -123,6 +124,9 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match ? anecdoteById(Number(match.params.id)) : null
+
   return (
     <div>
       <Menu />
@@ -131,6 +135,7 @@ const App = () => {
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/about' element={<About />} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />} />
       </Routes>
       <Footer />
     </div>
